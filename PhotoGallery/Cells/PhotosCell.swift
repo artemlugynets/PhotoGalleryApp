@@ -13,10 +13,18 @@ class PhotosCell: UICollectionViewCell {
     static let reuseId = "PhotosCell"
     
     private let checkmark: UIImageView = {
-        let image = UIImage(systemName: "checkmark")
+        let image = UIImage(named: "bird1")
         let imageView = UIImageView(image: image)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.alpha = 0
+        return imageView
+    }()
+    
+    let photoImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.backgroundColor = .darkGray
+        imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     
@@ -33,14 +41,6 @@ class PhotosCell: UICollectionViewCell {
             updateSelectedState()
         }
     }
-    
-        let photoImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = .darkGray
-        imageView.contentMode = .scaleAspectFill
-        return imageView
-    }()
     
     override func prepareForReuse() {
         super.prepareForReuse()
