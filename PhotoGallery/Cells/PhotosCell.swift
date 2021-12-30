@@ -70,7 +70,7 @@ class PhotosCell: UICollectionViewCell {
     private func setupCheckmarkView() {
         addSubview(checkmark)
         checkmark.trailingAnchor.constraint(equalTo: photoImageView.trailingAnchor, constant: -8).isActive = true
-        checkmark.bottomAnchor.constraint(equalTo: photoImageView.bottomAnchor, constant: 8).isActive = true
+        checkmark.bottomAnchor.constraint(equalTo: photoImageView.bottomAnchor, constant: -8).isActive = true
     }
     
     required init?(coder: NSCoder) {

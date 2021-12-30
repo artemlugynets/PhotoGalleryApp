@@ -94,10 +94,8 @@ class PhotoCollectionViewController: UICollectionViewController {
         present(alertController, animated: true)
     }
     @objc private func actionBarButtonTapped(sender: UIBarButtonItem) {
-        
-        
         let shareController = UIActivityViewController(activityItems: selectedImages, applicationActivities: nil)
-        
+    
         shareController.completionWithItemsHandler = { _, bool, _, _ in
             if bool {
                 self.refresh()
@@ -154,8 +152,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
-
-
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         enterSearchTermLabel.isHidden = photos.count != 0
         return photos.count
@@ -167,13 +164,8 @@ class PhotoCollectionViewController: UICollectionViewController {
         cell.unsplashPhoto = unsplashedPhoto
         return cell
     }
-
+    
     // MARK: UICollectionViewDelegate
-
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         updateNavButtonState()
@@ -207,7 +199,6 @@ extension PhotoCollectionViewController: UISearchBarDelegate {
                 self?.refresh()
             }
         })
-        
     }
 }
 

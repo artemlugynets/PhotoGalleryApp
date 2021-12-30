@@ -10,10 +10,16 @@ import UIKit
 class LikesCollectionViewController: UICollectionViewController {
     
     var photos = [UnsplashPhoto]()
+    private var selectedLikedImages = [UIImage]()
+    private var indexOfSelectedItem = [Int]()
     
     private lazy var trashBarButtonItem: UIBarButtonItem = {
         return UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(trashBarButtonTapped))
     }()
+    
+    private var numberOfSelectedPhotos: Int {
+        return collectionView.indexPathsForSelectedItems?.count ?? 0
+    }
     
     private let enterSearchTermLabel: UILabel = {
         let label = UILabel()
@@ -26,10 +32,9 @@ class LikesCollectionViewController: UICollectionViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        collectionView.backgroundColor = .white
         collectionView.register(LikesCollectionViewCell.self, forCellWithReuseIdentifier: LikesCollectionViewCell.reuseId)
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        collectionView.allowsMultipleSelection = true
         
         let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         layout.minimumInteritemSpacing = 1
@@ -58,7 +63,21 @@ class LikesCollectionViewController: UICollectionViewController {
         trashBarButtonItem.isEnabled = false
     }
     @objc private func trashBarButtonTapped() {
-//        refreshLikedPhotos()
+        for index in indexOfSelectedItem {
+            photos.remove(at: index)
+        }
+        collectionView.reloadData()
+        refreshLikedPhotos()
+    }
+    
+    func refreshLikedPhotos() {
+        self.selectedLikedImages.removeAll()
+        self.indexOfSelectedItem.removeAll()
+        self.collectionView.selectItem(at: nil, animated: true, scrollPosition: [])
+        updateNavButtonState()
+    }
+    private func updateNavButtonState() {
+        trashBarButtonItem.isEnabled = numberOfSelectedPhotos > 0
     }
     
     // MARK: - UICollectionViewDataSource
@@ -73,6 +92,24 @@ class LikesCollectionViewController: UICollectionViewController {
         let unsplashPhoto = photos[indexPath.item]
         cell.unsplashPhoto = unsplashPhoto
         return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        updateNavButtonState()
+        let cell = collectionView.cellForItem(at: indexPath) as! LikesCollectionViewCell
+        guard let image = cell.myImageView.image else { return }
+        selectedLikedImages.append(image)
+        indexOfSelectedItem.append(indexPath.item)
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        updateNavButtonState()
+        let cell = collectionView.cellForItem(at: indexPath) as! LikesCollectionViewCell
+        guard let image = cell.myImageView.image else { return }
+        if let index = selectedLikedImages.firstIndex(of: image) {
+            selectedLikedImages.remove(at: index)
+            indexOfSelectedItem.remove(at: index)
+        }
     }
 }
 
