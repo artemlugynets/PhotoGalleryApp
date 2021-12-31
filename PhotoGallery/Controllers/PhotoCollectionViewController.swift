@@ -7,8 +7,26 @@
 
 import UIKit
 
+enum Section: Int, CaseIterable {
+    case main
+}
+
 
 class PhotoCollectionViewController: UICollectionViewController {
+    
+    
+    //MARK: LayoutDataSource:
+    lazy var dataSource: UICollectionViewDiffableDataSource<Section, UnsplashPhoto> =  {
+        let diffablDataSource = UICollectionViewDiffableDataSource<Section, UnsplashPhoto>(collectionView: collectionView) { (collectionView, indexPath, itemIdentifier) -> UICollectionViewCell in
+            
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCell.reuseId, for: indexPath) as? PhotosCell else { fatalError("Cannot create the cell") }
+            let unsplashedPhoto = self.photos[indexPath.item]
+            cell.unsplashPhoto = unsplashedPhoto
+            return cell
+        }
+        return diffablDataSource
+    }()
+    
     var networkDataFetcher = NetworkDataFetcher()
     
     private var timer: Timer?
@@ -17,8 +35,8 @@ class PhotoCollectionViewController: UICollectionViewController {
     private var selectedImages = [UIImage]()
     
     
-    private let itemsPerRow: CGFloat = 2 // UICollectionViewDelegateFlowLayout
-    private let sectionInserts = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20) // UICollectionViewDelegateFlowLayout
+//    private let itemsPerRow: CGFloat = 2 // UICollectionViewDelegateFlowLayout
+//    private let sectionInserts = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20) // UICollectionViewDelegateFlowLayout
     
     private lazy var addBarButtonItem: UIBarButtonItem = {
         return UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addBarButtonTapped))
@@ -114,6 +132,8 @@ class PhotoCollectionViewController: UICollectionViewController {
         collectionView.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         collectionView.contentInsetAdjustmentBehavior = .automatic
         collectionView.allowsMultipleSelection = true
+        self.collectionView.dataSource = self.dataSource
+        self.collectionView.setCollectionViewLayout(createLayout(), animated: true)
     }
     
     private func setupSearchBar() {
@@ -143,27 +163,27 @@ class PhotoCollectionViewController: UICollectionViewController {
         titleLabel.font = UIFont.systemFont(ofSize: 15, weight: .medium)
         titleLabel.textColor = .black
         navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: titleLabel)
-        navigationItem.rightBarButtonItems = [actionBarButtonItem, addBarButtonItem]
+        navigationItem.rightBarButtonItems = [addBarButtonItem, actionBarButtonItem]
     }
 
-    // MARK: UICollectionViewDataSource
-
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        enterSearchTermLabel.isHidden = photos.count != 0
-        return photos.count
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCell.reuseId, for: indexPath) as! PhotosCell
-        let unsplashedPhoto = photos[indexPath.item]
-        cell.unsplashPhoto = unsplashedPhoto
-        return cell
-    }
+//    // MARK: UICollectionViewDataSource
+//
+//    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+//        // #warning Incomplete implementation, return the number of sections
+//        return 1
+//    }
+//
+//    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        enterSearchTermLabel.isHidden = photos.count != 0
+//        return photos.count
+//    }
+//
+//    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCell.reuseId, for: indexPath) as! PhotosCell
+//        let unsplashedPhoto = photos[indexPath.item]
+//        cell.unsplashPhoto = unsplashedPhoto
+//        return cell
+//    }
     
     // MARK: UICollectionViewDelegate
     
@@ -190,11 +210,13 @@ extension PhotoCollectionViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         print(searchText)
         timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { _ in
             self.networkDataFetcher.fetchImages(searchTerm: searchText) { [weak self] (searchResults) in
                 guard let fetchedPhotos = searchResults else { return }
                 self?.spinner.stopAnimating()
                 self?.photos = fetchedPhotos.results
+                self?.createSnapshot()
+                self?.enterSearchTermLabel.isHidden = self?.photos.count != 0
                 self?.collectionView.reloadData()
                 self?.refresh()
             }
@@ -204,21 +226,84 @@ extension PhotoCollectionViewController: UISearchBarDelegate {
 
 // MARK: UICollectionViewDelegateFlowLayout
 
-extension PhotoCollectionViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let photo = photos[indexPath.item]
-        let paddingSpace = sectionInserts.left * (itemsPerRow + 1)
-        let availableWidth = view.frame.width - paddingSpace
-        let widthPerItem = availableWidth / itemsPerRow
-        let height = CGFloat(photo.height) * widthPerItem / CGFloat(photo.width)
-        return CGSize(width: widthPerItem, height: height)
-    }
+//extension PhotoCollectionViewController: UICollectionViewDelegateFlowLayout {
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        let photo = photos[indexPath.item]
+//        let paddingSpace = sectionInserts.left * (itemsPerRow + 1)
+//        let availableWidth = view.frame.width - paddingSpace
+//        let widthPerItem = availableWidth / itemsPerRow
+//        let height = CGFloat(photo.height) * widthPerItem / CGFloat(photo.width)
+//        return CGSize(width: widthPerItem, height: height)
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+//        return sectionInserts
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+//        return sectionInserts.left
+//    }
+//}
+
+
+//MARK: UICollectionViewLayout
+
+extension PhotoCollectionViewController {
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return sectionInserts
+
+    func createLayout() -> UICollectionViewLayout {
+            let layout = UICollectionViewCompositionalLayout {
+                (sectionIndex: Int, layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
+
+                
+                let leadingItem = NSCollectionLayoutItem(
+                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.7),
+                                                       heightDimension: .fractionalHeight(1.0)))
+                leadingItem.contentInsets = NSDirectionalEdgeInsets(top: 1, leading: 1, bottom: 1, trailing: 1)
+
+                let trailingItem = NSCollectionLayoutItem(
+                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                       heightDimension: .fractionalHeight(0.3)))
+                trailingItem.contentInsets = NSDirectionalEdgeInsets(top: 1, leading: 1, bottom: 1, trailing: 1)
+                let trailingGroup = NSCollectionLayoutGroup.vertical(
+                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.3),
+                                                       heightDimension: .fractionalHeight(1.0)),
+                    subitem: trailingItem, count: 2)
+                
+                let leadingGroup = NSCollectionLayoutGroup.horizontal(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(0.4)), subitem: trailingGroup, count: 3)
+
+                let upperNestedGroup = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                       heightDimension: .fractionalHeight(0.3)),
+                    subitems: [leadingItem, trailingGroup])
+                
+                let bottomNestedGroup = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                       heightDimension: .fractionalHeight(0.3)),
+                    subitems: [trailingGroup, leadingItem])
+                
+                
+
+                let nestedGroup = NSCollectionLayoutGroup.vertical(
+                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                       heightDimension: .fractionalHeight(1.2)),
+                    subitems: [upperNestedGroup, leadingGroup, bottomNestedGroup])
+            
+                
+                let section = NSCollectionLayoutSection(group: nestedGroup)
+                return section
+
+            }
+            return layout
+        }
+
+    private func createSnapshot() {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, UnsplashPhoto>()
+        snapshot.appendSections([Section.main])
+        snapshot.appendItems(photos, toSection: .main)
+        dataSource.apply(snapshot, animatingDifferences: false)
     }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return sectionInserts.left
-    }
+
 }
+
+

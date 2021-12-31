@@ -12,7 +12,7 @@ struct SearchResultModel: Codable {
     let results: [UnsplashPhoto]
 }
 
-struct UnsplashPhoto: Codable {
+struct UnsplashPhoto: Codable, Hashable {
     let width: Int
     let height: Int
     let urls: [UrlKind.RawValue:String]

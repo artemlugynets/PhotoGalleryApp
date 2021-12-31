@@ -16,6 +16,9 @@ class LikesCollectionViewController: UICollectionViewController {
     private lazy var trashBarButtonItem: UIBarButtonItem = {
         return UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(trashBarButtonTapped))
     }()
+    private lazy var actionBarButtonItem: UIBarButtonItem = {
+        return UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(actionBarButtonTapped))
+    }()
     
     private var numberOfSelectedPhotos: Int {
         return collectionView.indexPathsForSelectedItems?.count ?? 0
@@ -59,8 +62,9 @@ class LikesCollectionViewController: UICollectionViewController {
         titleLabel.font = UIFont.systemFont(ofSize: 15, weight: .medium)
         titleLabel.textColor = .black
         navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: titleLabel)
-        navigationItem.rightBarButtonItem = trashBarButtonItem
+        navigationItem.rightBarButtonItems = [trashBarButtonItem, actionBarButtonItem]
         trashBarButtonItem.isEnabled = false
+        actionBarButtonItem.isEnabled = false
     }
     @objc private func trashBarButtonTapped() {
         for index in indexOfSelectedItem {
@@ -68,6 +72,20 @@ class LikesCollectionViewController: UICollectionViewController {
         }
         collectionView.reloadData()
         refreshLikedPhotos()
+    }
+    @objc private func actionBarButtonTapped(sender: UIBarButtonItem) {
+        let shareController = UIActivityViewController(activityItems: selectedLikedImages, applicationActivities: nil)
+    
+        shareController.completionWithItemsHandler = { _, bool, _, _ in
+            if bool {
+                self.refreshLikedPhotos()
+            }
+            
+        }
+        shareController.popoverPresentationController?.barButtonItem = sender
+        shareController.popoverPresentationController?.permittedArrowDirections = .any
+        present(shareController, animated: true, completion: nil)
+        
     }
     
     func refreshLikedPhotos() {
@@ -78,6 +96,7 @@ class LikesCollectionViewController: UICollectionViewController {
     }
     private func updateNavButtonState() {
         trashBarButtonItem.isEnabled = numberOfSelectedPhotos > 0
+        actionBarButtonItem.isEnabled = numberOfSelectedPhotos > 0
     }
     
     // MARK: - UICollectionViewDataSource

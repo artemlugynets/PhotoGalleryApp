@@ -31,7 +31,7 @@ class NetworkService {
         var parametres = [String:String]()
         parametres["query"] = searchTerm
         parametres["page"] = String(1)
-        parametres["per_page"] = String(30)
+        parametres["per_page"] = String(33)
         return parametres
     }
     
