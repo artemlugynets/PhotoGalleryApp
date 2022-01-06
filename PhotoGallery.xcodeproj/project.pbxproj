@@ -20,6 +20,9 @@
 		8EF1261A2778633E00A73219 /* PhotosCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF126192778633E00A73219 /* PhotosCell.swift */; };
 		8EF126252779ED1C00A73219 /* LikesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF126242779ED1C00A73219 /* LikesCollectionViewController.swift */; };
 		8EF126282779EFF200A73219 /* LikesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF126272779EFF200A73219 /* LikesCell.swift */; };
+		8EF1262E278329E100A73219 /* PreviewCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF1262D278329E100A73219 /* PreviewCollectionViewController.swift */; };
+		8EF1263027832A0000A73219 /* PreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF1262F27832A0000A73219 /* PreviewCell.swift */; };
+		8EF126322783339D00A73219 /* SaveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF126312783339D00A73219 /* SaveService.swift */; };
 		9283F3D18D1E109B91D4FDAD /* Pods_PhotoGallery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9CA543773D93A30FBE5E18A /* Pods_PhotoGallery.framework */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +43,9 @@
 		8EF126192778633E00A73219 /* PhotosCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCell.swift; sourceTree = "<group>"; };
 		8EF126242779ED1C00A73219 /* LikesCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesCollectionViewController.swift; sourceTree = "<group>"; };
 		8EF126272779EFF200A73219 /* LikesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesCell.swift; sourceTree = "<group>"; };
+		8EF1262D278329E100A73219 /* PreviewCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewCollectionViewController.swift; sourceTree = "<group>"; };
+		8EF1262F27832A0000A73219 /* PreviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewCell.swift; sourceTree = "<group>"; };
+		8EF126312783339D00A73219 /* SaveService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveService.swift; sourceTree = "<group>"; };
 		A9CA543773D93A30FBE5E18A /* Pods_PhotoGallery.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PhotoGallery.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B536FDFF052237057D40E77D /* Pods-PhotoGallery.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotoGallery.release.xcconfig"; path = "Target Support Files/Pods-PhotoGallery/Pods-PhotoGallery.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -84,6 +90,7 @@
 				8EF126182778627600A73219 /* Controllers */,
 				8EF125FE277605C100A73219 /* Main.storyboard */,
 				8EF126262779EFC900A73219 /* Cells */,
+				8EF126312783339D00A73219 /* SaveService.swift */,
 				8EF12601277605C300A73219 /* Assets.xcassets */,
 				8EF12603277605C300A73219 /* LaunchScreen.storyboard */,
 				8EF12606277605C300A73219 /* Info.plist */,
@@ -113,6 +120,7 @@
 			children = (
 				8EF1260E2776075900A73219 /* PhotoCollectionViewController.swift */,
 				8EF126242779ED1C00A73219 /* LikesCollectionViewController.swift */,
+				8EF1262D278329E100A73219 /* PreviewCollectionViewController.swift */,
 				8EF1260C277605FA00A73219 /* MainTabBarController.swift */,
 			);
 			path = Controllers;
@@ -123,6 +131,7 @@
 			children = (
 				8EF126192778633E00A73219 /* PhotosCell.swift */,
 				8EF126272779EFF200A73219 /* LikesCell.swift */,
+				8EF1262F27832A0000A73219 /* PreviewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -261,9 +270,12 @@
 			files = (
 				8EF126142776596600A73219 /* NetworkDataFetcher.swift in Sources */,
 				8EF126252779ED1C00A73219 /* LikesCollectionViewController.swift in Sources */,
+				8EF1262E278329E100A73219 /* PreviewCollectionViewController.swift in Sources */,
 				8EF126282779EFF200A73219 /* LikesCell.swift in Sources */,
 				8EF1260F2776075900A73219 /* PhotoCollectionViewController.swift in Sources */,
 				8EF125F9277605C100A73219 /* AppDelegate.swift in Sources */,
+				8EF1263027832A0000A73219 /* PreviewCell.swift in Sources */,
+				8EF126322783339D00A73219 /* SaveService.swift in Sources */,
 				8EF1260D277605FB00A73219 /* MainTabBarController.swift in Sources */,
 				8EF1261127764C7900A73219 /* NetworkService.swift in Sources */,
 				8EF12616277659D000A73219 /* SearchResultsModel.swift in Sources */,

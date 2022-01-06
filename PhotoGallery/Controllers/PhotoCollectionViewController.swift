@@ -12,7 +12,7 @@ enum Section: Int, CaseIterable {
 }
 
 
-class PhotoCollectionViewController: UICollectionViewController {
+class PhotoCollectionViewController: UICollectionViewController, UIGestureRecognizerDelegate {
     
     
     //MARK: LayoutDataSource:
@@ -75,6 +75,31 @@ class PhotoCollectionViewController: UICollectionViewController {
         setupSpinner()
     }
     
+    // MARK: - Gesture recognizer
+    
+    func addGR() {
+        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressPreview(recognizer:)))
+        gesture.minimumPressDuration = 0.5
+        gesture.delaysTouchesBegan = true
+        gesture.delegate = self
+        self.collectionView.addGestureRecognizer(gesture)
+    }
+    
+    @objc func longPressPreview(recognizer: UILongPressGestureRecognizer) {
+        if recognizer.state != UILongPressGestureRecognizer.State.began {
+            let p = recognizer.location(in: self.collectionView)
+            let indexPath = self.collectionView.indexPathForItem(at: p)
+            
+            if let PreviewVC = self.storyboard?.instantiateViewController(withIdentifier: "PreviewCollectionViewController") as? PreviewCollectionViewController {
+                let cell = collectionView.cellForItem(at: indexPath!) as! PhotosCell
+                guard let image = cell.photoImageView.image else { return }
+                PreviewVC.previewPhoto = image
+                self.navigationController?.present(PreviewVC, animated: true, completion: nil)
+//                self.navigationController?.pushViewController(PreviewVC, animated: true)
+            }
+        }
+    }
+    
     private func updateNavButtonState() {
         addBarButtonItem.isEnabled = numberOfSelectedPhotos > 0
         actionBarButtonItem.isEnabled = numberOfSelectedPhotos > 0
@@ -99,8 +124,9 @@ class PhotoCollectionViewController: UICollectionViewController {
             let tabbar = self.tabBarController as! MainTabBarController
             let navVC = tabbar.viewControllers?[1] as! UINavigationController
             let likesVC = navVC.topViewController as! LikesCollectionViewController
-    
+            likesVC.readSavedPhotos()
             likesVC.photos.append(contentsOf: selectedPhotos ?? [])
+            likesVC.savePhotos()
             likesVC.collectionView.reloadData()
             
             self.refresh()
@@ -113,17 +139,14 @@ class PhotoCollectionViewController: UICollectionViewController {
     }
     @objc private func actionBarButtonTapped(sender: UIBarButtonItem) {
         let shareController = UIActivityViewController(activityItems: selectedImages, applicationActivities: nil)
-    
         shareController.completionWithItemsHandler = { _, bool, _, _ in
             if bool {
                 self.refresh()
             }
-            
         }
         shareController.popoverPresentationController?.barButtonItem = sender
         shareController.popoverPresentationController?.permittedArrowDirections = .any
         present(shareController, animated: true, completion: nil)
-        
     }
 
     // MARK: - Setup UI Elements
@@ -211,13 +234,14 @@ extension PhotoCollectionViewController: UISearchBarDelegate {
         print(searchText)
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { _ in
-            self.networkDataFetcher.fetchImages(searchTerm: searchText) { [weak self] (searchResults) in
+                self.networkDataFetcher.fetchImages(searchTerm: searchText) { [weak self] (searchResults) in
                 guard let fetchedPhotos = searchResults else { return }
                 self?.spinner.stopAnimating()
                 self?.photos = fetchedPhotos.results
                 self?.createSnapshot()
                 self?.enterSearchTermLabel.isHidden = self?.photos.count != 0
                 self?.collectionView.reloadData()
+                self?.addGR()
                 self?.refresh()
             }
         })
@@ -250,7 +274,6 @@ extension PhotoCollectionViewController: UISearchBarDelegate {
 
 extension PhotoCollectionViewController {
     
-
     func createLayout() -> UICollectionViewLayout {
             let layout = UICollectionViewCompositionalLayout {
                 (sectionIndex: Int, layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
@@ -303,7 +326,8 @@ extension PhotoCollectionViewController {
         snapshot.appendItems(photos, toSection: .main)
         dataSource.apply(snapshot, animatingDifferences: false)
     }
-
 }
+
+
 
 

@@ -41,13 +41,14 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="TdY-BC-Zmh" customClass="PhotosCell" customModule="PhotoGallery">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="" id="TdY-BC-Zmh" customClass="PhotosCell" customModule="PhotoGallery">
                                 <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="P8P-As-1xG">
                                     <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </collectionViewCellContentView>
+                                <gestureRecognizers/>
                             </collectionViewCell>
                         </cells>
                         <connections>
@@ -60,6 +61,60 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rCN-do-fCm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="113.04347826086958" y="-861.16071428571422"/>
+        </scene>
+        <!--Preview Collection View Controller-->
+        <scene sceneID="S8U-FU-Eri">
+            <objects>
+                <collectionViewController storyboardIdentifier="PreviewCollectionViewController" id="hmP-ZE-se5" customClass="PreviewCollectionViewController" customModule="PhotoGallery" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="ZMA-eF-S1l">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="elg-d8-Hu0">
+                            <size key="itemSize" width="400" height="857"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PreviewCollectionViewCell" id="mZZ-zF-tyx" customClass="PreviewCell" customModule="PhotoGallery" customModuleProvider="target">
+                                <rect key="frame" x="7" y="0.0" width="400" height="857"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="VTU-w4-0gj">
+                                    <rect key="frame" x="0.0" y="0.0" width="400" height="857"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="P0l-NV-O4F">
+                                            <rect key="frame" x="-10" y="0.0" width="420" height="857"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="857" id="Huc-uR-Lzo"/>
+                                                <constraint firstAttribute="width" constant="430" id="bGV-G2-TFT"/>
+                                            </constraints>
+                                        </imageView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="P0l-NV-O4F" firstAttribute="top" secondItem="VTU-w4-0gj" secondAttribute="top" id="5A5-Th-T7G"/>
+                                        <constraint firstAttribute="trailing" secondItem="P0l-NV-O4F" secondAttribute="trailing" constant="-10" id="GIa-uu-pu2"/>
+                                        <constraint firstItem="P0l-NV-O4F" firstAttribute="leading" secondItem="VTU-w4-0gj" secondAttribute="leading" constant="-10" id="LMS-4Z-bK9"/>
+                                        <constraint firstAttribute="bottom" secondItem="P0l-NV-O4F" secondAttribute="bottom" id="RdS-uB-sfU"/>
+                                    </constraints>
+                                </collectionViewCellContentView>
+                                <size key="customSize" width="400" height="857"/>
+                                <connections>
+                                    <outlet property="imageItem" destination="P0l-NV-O4F" id="wv0-X8-tKQ"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="hmP-ZE-se5" id="hKH-bO-8FC"/>
+                            <outlet property="delegate" destination="hmP-ZE-se5" id="DEa-57-dLr"/>
+                        </connections>
+                    </collectionView>
+                    <navigationItem key="navigationItem" id="Z75-pF-zB0"/>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="PAY-P9-xv8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="957.97101449275374" y="-102.45535714285714"/>
         </scene>
         <!--Photo-->
         <scene sceneID="Pgi-hl-tIY">
@@ -121,6 +176,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </collectionViewCellContentView>
+                                <gestureRecognizers/>
                             </collectionViewCell>
                         </cells>
                         <connections>
